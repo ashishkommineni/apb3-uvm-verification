@@ -14,6 +14,19 @@ module tb_apb_smoke;
   ) dut (
       .*
   );
+  apb_sva #(
+      .ADDR_WIDTH(ADDR_WIDTH),
+      .DATA_WIDTH(DATA_WIDTH)
+  ) sva (
+      .PCLK,
+      .PRESETn,
+      .PSEL,
+      .PENABLE,
+      .PWRITE,
+      .PREADY,
+      .PADDR,
+      .PWDATA
+  );
   task automatic access (input bit wr, input logic [7:0] addr, input logic [31:0] wdata,
                          output logic [31:0] rdata, output bit err);
     int waits = 0;
@@ -55,6 +68,8 @@ module tb_apb_smoke;
     end
     access (0, 8'h40, 0, r, e);
     if (!e) $fatal(1, "invalid address did not assert PSLVERR");
+    access (0, 8'h01, 0, r, e);
+    if (!e) $fatal(1, "unaligned address did not assert PSLVERR");
     $display("APB3_SMOKE_PASS checks=%0d", checks);
     $finish;
   end
