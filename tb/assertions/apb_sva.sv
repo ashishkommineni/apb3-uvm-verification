@@ -18,6 +18,8 @@ module apb_sva #(
   assert property (PENABLE |-> PSEL);
   ap_setup_to_access :
   assert property ((PSEL && !PENABLE) |=> PSEL && PENABLE);
+  ap_wait_holds_access :
+  assert property ((PSEL && PENABLE && !PREADY) |=> PSEL && PENABLE);
   ap_control_stable_wait :
   assert property ((PSEL && PENABLE && !PREADY) |=> $stable({PADDR, PWRITE, PWDATA}));
   cp_read :
