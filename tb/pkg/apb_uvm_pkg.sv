@@ -15,7 +15,10 @@ package apb_uvm_pkg;
         [ 0 :  15] := 8,
         [16 : 255] := 2
       };
-      addr[1:0] == 0;
+      addr[1:0] dist {
+        0 := 8,
+        [1 : 3] := 2
+      };
     }
     `uvm_object_utils_begin(apb_item)
       `uvm_field_int(addr, UVM_HEX)
@@ -140,6 +143,9 @@ package apb_uvm_pkg;
                      "addr=%02h expected=%08h got=%08h", tr.addr, model[tr.addr[3:2]], tr.rdata))
       end
     endfunction
+    function void check_phase(uvm_phase phase);
+      if (checked == 0) `uvm_error("NO_TRAFFIC", "No APB transfers reached the scoreboard")
+    endfunction
     function void report_phase(uvm_phase phase);
       `uvm_info("APB_SUMMARY", $sformatf("Checked %0d transfers", checked), UVM_LOW)
     endfunction
@@ -203,6 +209,18 @@ package apb_uvm_pkg;
         req.data  = 0;
         finish_item(req);
       end
+      req = apb_item::type_id::create("misaligned");
+      start_item(req);
+      req.addr  = 1;
+      req.write = 0;
+      req.data  = 0;
+      finish_item(req);
+      req = apb_item::type_id::create("decode_error");
+      start_item(req);
+      req.addr  = 8'h40;
+      req.write = 0;
+      req.data  = 0;
+      finish_item(req);
       repeat (80) begin
         req = apb_item::type_id::create("rand");
         start_item(req);
