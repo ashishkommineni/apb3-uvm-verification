@@ -12,7 +12,7 @@ lint:
 	$(VERILATOR) --lint-only --sv --timing -Wall -Wno-fatal rtl/apb3_register_slave.sv
 smoke:
 	rm -rf build/obj_apb;mkdir -p build
-	$(VERILATOR) --binary --sv --timing --assert -Wall -Wno-fatal --top-module tb_apb_smoke --Mdir build/obj_apb rtl/apb3_register_slave.sv tb/smoke/tb_apb_smoke.sv
-	./build/obj_apb/Vtb_apb_smoke|tee results_smoke.log
+	$(VERILATOR) --binary --sv --timing --assert -Wall -Wno-fatal -Wno-SYNCASYNCNET --top-module tb_apb_smoke --Mdir build/obj_apb rtl/apb3_register_slave.sv tb/assertions/apb_sva.sv tb/smoke/tb_apb_smoke.sv
+	bash -o pipefail -c './build/obj_apb/Vtb_apb_smoke | tee results_smoke.log'
 clean:
 	rm -rf build xcelium.d INCA_libs waves.shm results *.log *.key

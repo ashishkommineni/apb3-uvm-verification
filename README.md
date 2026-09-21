@@ -23,7 +23,7 @@ make lint
 make smoke
 ```
 
-The smoke test performs four writes, four readbacks, and one invalid access with two inserted wait states. Passing output is `APB3_SMOKE_PASS checks=9`. The Xcelium regression adds constrained-random traffic, coverage, and assertion checking.
+The smoke test performs four writes, four readbacks, one out-of-range access, one unaligned access, and live SVA with two inserted wait states. Passing output is `APB3_SMOKE_PASS checks=10`. The Xcelium regression adds constrained-random traffic and functional coverage.
 
 See [verified results and tool scope](docs/verification_results.md) for the reproducible validation record.
 
